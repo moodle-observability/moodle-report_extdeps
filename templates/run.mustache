@@ -1,0 +1,89 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template report_extdeps/run
+
+    Progress and verdicts of an on demand analysis.
+
+    Context variables required for this template:
+    * statusname, scope, dryrun, strict, pending, failed, processed, total, percent
+    * counters - Verdicts and their counts
+    * http - Text with the request statistics
+    * items - Verdict of each dependency with its evidence
+    * backurl - Address of the report the analysis came from
+
+    Example context (json):
+    {
+        "id": 3, "statusname": "Done", "scope": "Activity", "dryrun": false, "strict": true, "pending": false,
+        "failed": false, "processed": 1, "total": 1, "percent": 100, "hascounters": true,
+        "counters": [{"name": "Confirmed available", "count": 1}],
+        "http": "2 requests, 1.2 s waiting, slowest 0.8 s",
+        "hasitems": true,
+        "items": [{"providername": "YouTube", "resourcekey": "dQw4w9WgXcQ", "verdictname": "Confirmed available",
+            "statusname": "Available", "method": "page", "http": "200", "reason": "", "ok": true, "broken": false,
+            "historyurl": "#"}],
+        "backurl": "#"
+    }
+}}
+<div class="report_extdeps-run">
+    <p>
+        <strong>{{statusname}}</strong> · {{scope}}
+        {{#dryrun}} · {{#str}} dryrun, report_extdeps {{/str}}{{/dryrun}}
+        {{#strict}} · {{#str}} strict, report_extdeps {{/str}}{{/strict}}
+    </p>
+    {{#pending}}
+    <div class="progress mb-2" role="progressbar" aria-valuenow="{{percent}}" aria-valuemin="0" aria-valuemax="100"
+        aria-label="{{#str}} progress, report_extdeps {{/str}}">
+        <div class="progress-bar" style="width: {{percent}}%">{{processed}} / {{total}}</div>
+    </div>
+    <p class="text-muted">{{#str}} pendinginfo, report_extdeps {{/str}}</p>
+    {{/pending}}
+    {{#failed}}
+    <div class="alert alert-danger">{{#str}} runfailed, report_extdeps {{/str}}</div>
+    {{/failed}}
+    {{#hascounters}}
+    <ul class="list-inline">
+        {{#counters}}<li class="list-inline-item"><span class="badge text-bg-light bg-light text-dark">{{name}}: {{count}}</span></li>{{/counters}}
+    </ul>
+    {{/hascounters}}
+    {{#http}}<p class="small text-muted">{{http}}</p>{{/http}}
+    {{#hasitems}}
+    <table class="table table-sm table-striped generaltable">
+        <thead>
+            <tr>
+                <th scope="col">{{#str}} provider, report_extdeps {{/str}}</th>
+                <th scope="col">{{#str}} resourcekey, report_extdeps {{/str}}</th>
+                <th scope="col">{{#str}} verdict, report_extdeps {{/str}}</th>
+                <th scope="col">{{#str}} status, report_extdeps {{/str}}</th>
+                <th scope="col">{{#str}} evidence, report_extdeps {{/str}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#items}}
+            <tr>
+                <td>{{providername}}</td>
+                <td>{{#historyurl}}<a href="{{historyurl}}">{{resourcekey}}</a>{{/historyurl}}{{^historyurl}}{{resourcekey}}{{/historyurl}}</td>
+                <td><span class="badge {{#ok}}text-bg-success bg-success{{/ok}}{{#broken}}text-bg-danger bg-danger{{/broken}}{{^ok}}{{^broken}}text-bg-warning bg-warning text-dark{{/broken}}{{/ok}}">{{verdictname}}</span></td>
+                <td>{{statusname}}</td>
+                <td class="small">{{method}}{{#http}} · HTTP {{http}}{{/http}}{{#reason}} · {{reason}}{{/reason}}</td>
+            </tr>
+            {{/items}}
+        </tbody>
+    </table>
+    {{/hasitems}}
+    <p><a class="btn btn-secondary" href="{{backurl}}">{{#str}} back {{/str}}</a></p>
+</div>

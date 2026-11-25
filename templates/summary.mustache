@@ -1,0 +1,89 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template report_extdeps/summary
+
+    Cards with the counters per provider and the buttons of the page.
+
+    Context variables required for this template:
+    * intro - Optional text above the cards
+    * cards - Providers with ok, broken and pending occurrences and the broken statuses
+    * buttons - Links (url, label) or POST buttons (post, sesskey, courseid)
+    * showadvice - Show what to do under each broken situation
+    * nocards - Do not show the cards
+    * toggle - Link (url, label) between only the broken dependencies and all of them
+
+    Example context (json):
+    {
+        "intro": "Videos and packages used by this course.",
+        "cards": [
+            {"provider": "YouTube", "ok": 1019, "broken": 229, "pending": 0, "hasbroken": true,
+             "statuses": [{"name": "Private", "count": 207, "resources": 178, "advice": "Ask the owner."}]}
+        ],
+        "buttons": [{"url": "#", "label": "All occurrences"}],
+        "showadvice": true,
+        "toggle": {"url": "#", "label": "Show the available ones too"}
+    }
+}}
+<div class="report_extdeps-summary mb-4">
+    {{#intro}}<p>{{intro}}</p>{{/intro}}
+    {{^nocards}}
+    <div class="d-flex flex-wrap gap-3 mb-3">
+        {{#cards}}
+        <div class="card report_extdeps-card">
+            <div class="card-body">
+                <h3 class="h5 card-title">{{provider}}</h3>
+                <p class="mb-1">
+                    <span class="badge {{#hasbroken}}text-bg-danger bg-danger{{/hasbroken}}{{^hasbroken}}text-bg-success bg-success{{/hasbroken}}">
+                        {{#str}} brokencount, report_extdeps, {{broken}} {{/str}}
+                    </span>
+                    <span class="badge text-bg-light bg-light text-dark">{{#str}} okcount, report_extdeps, {{ok}} {{/str}}</span>
+                    {{#pending}}<span class="badge text-bg-secondary bg-secondary">{{#str}} pendingcount, report_extdeps, {{pending}} {{/str}}</span>{{/pending}}
+                </p>
+                {{#hasbroken}}
+                <ul class="list-unstyled small mb-0">
+                    {{#statuses}}
+                    <li class="mb-1"><strong>{{name}}: {{count}}</strong>{{#showadvice}}{{#advice}}<div class="text-muted">{{advice}}</div>{{/advice}}{{/showadvice}}</li>
+                    {{/statuses}}
+                </ul>
+                {{/hasbroken}}
+            </div>
+        </div>
+        {{/cards}}
+        {{^cards}}
+        <p class="text-muted">{{#str}} nothingfound, report_extdeps {{/str}}</p>
+        {{/cards}}
+    </div>
+    {{/nocards}}
+    <div class="d-flex flex-wrap gap-2">
+        {{#buttons}}
+        {{#post}}
+        <form method="post" action="{{url}}" class="d-inline">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="courseid" value="{{courseid}}">
+            <button type="submit" class="btn btn-primary">{{label}}</button>
+        </form>
+        {{/post}}
+        {{^post}}
+        <a class="btn btn-secondary" href="{{url}}">{{label}}</a>
+        {{/post}}
+        {{/buttons}}
+        {{#toggle}}
+        <a class="btn btn-link" href="{{url}}">{{label}}</a>
+        {{/toggle}}
+    </div>
+</div>

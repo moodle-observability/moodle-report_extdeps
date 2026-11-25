@@ -1,0 +1,11 @@
+/* Some themes shrink the report layout to the width of its content (width: auto): use the available width. */
+body.path-admin-report-extdeps #page-wrapper #page #topofscroll.main-inner,
+body.path-report-extdeps #page-wrapper #page #topofscroll.main-inner {
+    width: 100%;
+    max-width: 1400px;
+}
+
+.report_extdeps-card {
+    min-width: 16rem;
+    max-width: 26rem;
+}

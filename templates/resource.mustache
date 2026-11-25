@@ -1,0 +1,106 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template report_extdeps/resource
+
+    One external dependency: situation, what to do, where it is used and its history.
+
+    Context variables required for this template:
+    * provider, resourcekey, url, status, broken, lastresult, since, lastcheck, detail, advice
+    * exception - Accepted false positive (reason, time), when there is one
+    * places - Where it is used (course, courseurl, place, source, editurl)
+    * history - Changes of situation (time, old, new, detail)
+    * backurl - Address of the report
+
+    Example context (json):
+    {
+        "provider": "Vimeo", "resourcekey": "199209233", "url": "https://vimeo.com/199209233",
+        "status": "Private", "broken": true, "lastresult": "Private", "since": "24 November 2026",
+        "lastcheck": "24 November 2026", "detail": "method: oembed+player · http: 404 · player: 403",
+        "advice": "The content became private.", "exception": null,
+        "hasplaces": true,
+        "places": [{"course": "Course", "courseurl": "#", "place": "<a href=\"#\">Page</a>", "source": "page.content",
+            "editurl": "#"}],
+        "hashistory": true,
+        "history": [{"time": "24 November 2026", "old": "Not checked yet", "new": "Private", "detail": ""}],
+        "backurl": "#"
+    }
+}}
+<div class="report_extdeps-resource">
+    <dl class="row">
+        <dt class="col-sm-3">{{#str}} provider, report_extdeps {{/str}}</dt>
+        <dd class="col-sm-9">{{provider}}</dd>
+        <dt class="col-sm-3">{{#str}} url, report_extdeps {{/str}}</dt>
+        <dd class="col-sm-9">{{#url}}<a href="{{url}}" target="_blank" rel="noopener">{{url}}</a>{{/url}}{{^url}}{{resourcekey}}{{/url}}</dd>
+        <dt class="col-sm-3">{{#str}} status, report_extdeps {{/str}}</dt>
+        <dd class="col-sm-9"><span class="badge {{#broken}}text-bg-danger bg-danger{{/broken}}{{^broken}}text-bg-light bg-light text-dark{{/broken}}">{{status}}</span>{{#since}} · {{#str}} sincedate, report_extdeps, {{since}} {{/str}}{{/since}}</dd>
+        <dt class="col-sm-3">{{#str}} lastresult, report_extdeps {{/str}}</dt>
+        <dd class="col-sm-9">{{lastresult}}{{#lastcheck}} · {{lastcheck}}{{/lastcheck}}{{#detail}}<div class="small text-muted">{{detail}}</div>{{/detail}}</dd>
+    </dl>
+    {{#advice}}
+    <div class="alert alert-warning"><strong>{{#str}} advice, report_extdeps {{/str}}:</strong> {{advice}}</div>
+    {{/advice}}
+    {{#exception}}
+    <div class="alert alert-info">{{#str}} exceptionactive, report_extdeps {{/str}} {{reason}} ({{time}})</div>
+    {{/exception}}
+
+    <h3 class="h5">{{#str}} places, report_extdeps {{/str}}</h3>
+    {{#hasplaces}}
+    <table class="table table-sm generaltable">
+        <thead>
+            <tr>
+                <th scope="col">{{#str}} course {{/str}}</th>
+                <th scope="col">{{#str}} activity {{/str}}</th>
+                <th scope="col">{{#str}} field, report_extdeps {{/str}}</th>
+                <th scope="col">{{#str}} edit {{/str}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#places}}
+            <tr>
+                <td><a href="{{courseurl}}">{{course}}</a></td>
+                <td>{{{place}}}</td>
+                <td>{{source}}</td>
+                <td>{{#editurl}}<a class="btn btn-sm btn-outline-secondary" href="{{editurl}}">{{#str}} edit {{/str}}</a>{{/editurl}}</td>
+            </tr>
+            {{/places}}
+        </tbody>
+    </table>
+    {{/hasplaces}}
+    {{^hasplaces}}<p class="text-muted">{{#str}} noplaces, report_extdeps {{/str}}</p>{{/hasplaces}}
+
+    <h3 class="h5">{{#str}} history, report_extdeps {{/str}}</h3>
+    {{#hashistory}}
+    <table class="table table-sm generaltable">
+        <thead>
+            <tr>
+                <th scope="col">{{#str}} date {{/str}}</th>
+                <th scope="col">{{#str}} from, report_extdeps {{/str}}</th>
+                <th scope="col">{{#str}} to, report_extdeps {{/str}}</th>
+                <th scope="col">{{#str}} evidence, report_extdeps {{/str}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#history}}
+            <tr><td>{{time}}</td><td>{{old}}</td><td>{{new}}</td><td class="small">{{detail}}</td></tr>
+            {{/history}}
+        </tbody>
+    </table>
+    {{/hashistory}}
+    {{^hashistory}}<p class="text-muted">{{#str}} nohistory, report_extdeps {{/str}}</p>{{/hashistory}}
+    <p><a class="btn btn-secondary" href="{{backurl}}">{{#str}} back {{/str}}</a></p>
+</div>
