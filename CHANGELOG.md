@@ -3,6 +3,7 @@
 ## 0.1.2 - 2026-11-25
 
 - Credits of the Moodle Observability family; first public release.
+- Behat: the scenarios show all the dependencies, since only the broken ones are listed by default.
 
 ## 0.1.1 - 2026-11-24
 

@@ -31,6 +31,8 @@ Feature: See the external dependencies of the site and of a course
     Then I should see "Course 1" in the "reportbuilder-table" "table"
     And I should see "Course 2" in the "reportbuilder-table" "table"
     And I click on "All occurrences" "link"
+    # Only the broken ones by default; nothing was checked yet in this site.
+    And I click on "Show the available ones too" "link"
     And I should see "Video page" in the "reportbuilder-table" "table"
     And I should see "Other page" in the "reportbuilder-table" "table"
     And I click on "Filters" "button"
@@ -45,6 +47,7 @@ Feature: See the external dependencies of the site and of a course
     Given I log in as "teacher1"
     When I am on the "Course 1" "course" page
     And I navigate to "Reports > External dependencies" in current page administration
+    And I click on "Show the available ones too" "link"
     Then I should see "Video page" in the "reportbuilder-table" "table"
     And I should not see "Other page"
     And "Edit" "link" should exist in the "Video page" "table_row"
