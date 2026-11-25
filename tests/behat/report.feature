@@ -25,6 +25,7 @@ Feature: See the external dependencies of the site and of a course
       | page     | C2     | Other page   | <iframe src="https://player.vimeo.com/video/123456789"></iframe>  |
     And I run the scheduled task "\tool_extdeps\task\scan_dirty_courses"
 
+  @javascript
   Scenario: The manager sees every course and filters the occurrences
     Given I log in as "manager1"
     When I navigate to "Reports > External dependencies" in site administration
